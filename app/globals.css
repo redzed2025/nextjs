@@ -1,26 +1,107 @@
 @import "tailwindcss";
 
+@theme {
+  --color-fond: #08080c;
+  --color-fond-2: #101019;
+  --color-fond-3: #17172a;
+  --color-bord: #262640;
+  --color-texte: #ecebff;
+  --color-texte-doux: #9a99bd;
+  --color-accent: #8b7dff;
+  --color-accent-vif: #a99bff;
+  --color-cyan: #33d9ec;
+  --color-succes: #35d19a;
+  --color-alerte: #ffb454;
+  --color-erreur: #ff6b81;
+
+  --font-sans: var(--police-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--police-mono), ui-monospace, "SFMono-Regular", monospace;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: dark;
+  --marge-basse: env(safe-area-inset-bottom, 0px);
+  --marge-haute: env(safe-area-inset-top, 0px);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html,
+body {
+  background: var(--color-fond);
+  color: var(--color-texte);
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+}
+
+/* Les champs de saisie sous 16px déclenchent un zoom automatique sur iOS. */
+input,
+textarea,
+select {
+  font-size: max(16px, 1em);
+}
+
+@layer components {
+  .carte {
+    @apply rounded-2xl border border-bord bg-fond-2;
+  }
+
+  .bouton {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3
+      text-sm font-medium transition-colors select-none
+      disabled:opacity-40 disabled:pointer-events-none;
+  }
+
+  .bouton-principal {
+    @apply bg-accent text-[#0b0a1a] hover:bg-accent-vif active:bg-accent-vif;
+  }
+
+  .bouton-secondaire {
+    @apply border border-bord bg-fond-3 text-texte hover:border-accent/60;
+  }
+
+  .bouton-fantome {
+    @apply text-texte-doux hover:text-texte hover:bg-fond-3;
+  }
+
+  .bouton-danger {
+    @apply border border-erreur/40 text-erreur hover:bg-erreur/10;
+  }
+
+  .champ {
+    @apply w-full rounded-xl border border-bord bg-fond px-3 py-3 text-texte
+      placeholder:text-texte-doux/60 outline-none
+      focus:border-accent focus:ring-2 focus:ring-accent/25;
+  }
+
+  .etiquette {
+    @apply block text-sm font-medium text-texte-doux mb-1.5;
+  }
+
+  .puce {
+    @apply inline-flex items-center gap-1 rounded-full border border-bord
+      bg-fond-3 px-2.5 py-1 text-xs text-texte-doux;
+  }
+}
+
+/* Coloration syntaxique de l'éditeur (voir lib/coloration.ts). */
+.jeton-balise { color: #ff8fa8; }
+.jeton-attribut { color: #ffcf7a; }
+.jeton-chaine { color: #6fe3b0; }
+.jeton-commentaire { color: #6c6b8f; font-style: italic; }
+.jeton-motcle { color: #b39bff; }
+.jeton-nombre { color: #7fd7ff; }
+.jeton-fonction { color: #8be9fd; }
+
+@keyframes pulsation {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 1; }
+}
+
+.curseur-flux::after {
+  content: "▍";
+  animation: pulsation 1s ease-in-out infinite;
+  color: var(--color-accent);
 }

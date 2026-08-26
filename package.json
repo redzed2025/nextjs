@@ -1,12 +1,15 @@
 {
-  "name": "nextjs",
+  "name": "atelier",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
+    "start": "npx --yes serve out",
+    "lint": "eslint",
+    "test": "node --test \"lib/**/*.test.ts\"",
+    "typecheck": "tsc --noEmit",
+    "verif": "node scripts/verification.mjs"
   },
   "dependencies": {
     "next": "16.2.4",
@@ -16,11 +19,15 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
+    "@types/qrcode": "^1.5.6",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.4",
+    "playwright": "^1.62.1",
+    "qrcode": "^1.5.4",
     "tailwindcss": "^4",
     "typescript": "^5"
-  }
+  },
+  "description": "Créez un site ou une application depuis votre téléphone, avec vos propres clés IA."
 }

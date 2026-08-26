@@ -1,0 +1,14 @@
+# En-têtes de sécurité, format Cloudflare Pages / Netlify.
+# Next.js est ici en export statique : `headers()` dans next.config n'est pas
+# appliqué, ces règles sont servies par l'hébergeur.
+
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: no-referrer
+  Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), interest-cohort=()
+  Cross-Origin-Opener-Policy: same-origin
+
+/sw.js
+  Content-Type: application/javascript; charset=utf-8
+  Cache-Control: no-cache, no-store, must-revalidate
