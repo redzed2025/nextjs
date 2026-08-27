@@ -6,6 +6,12 @@ import { renderBoardSvg } from "@/lib/svg";
 
 type Format = "svg" | "figma";
 
+/**
+ * An export downloads every pin at full resolution before it can render, which
+ * takes far longer than a platform's default function timeout allows.
+ */
+export const maxDuration = 60;
+
 function parseFormat(value: unknown): Format {
   return value === "figma" ? "figma" : "svg";
 }

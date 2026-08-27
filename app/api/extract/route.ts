@@ -4,6 +4,12 @@ import { LIMITS } from "@/lib/board";
 /** Cap on URLs per request so one paste cannot fan out into hundreds of fetches. */
 const MAX_URLS = 20;
 
+/**
+ * Each Pinterest page is fetched with a 15s timeout, so a multi-URL paste needs
+ * more headroom than a platform's default function timeout usually allows.
+ */
+export const maxDuration = 60;
+
 export async function POST(request: Request) {
   let payload: unknown;
   try {
