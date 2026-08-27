@@ -1,0 +1,111 @@
+<style>
+  :root {
+    color-scheme: light dark;
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 12px;
+  }
+  body {
+    margin: 0;
+    padding: 16px;
+    color: var(--figma-color-text, #1e1e1e);
+    background: var(--figma-color-bg, #fff);
+  }
+  h1 {
+    margin: 0 0 6px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  p {
+    margin: 0 0 14px;
+    line-height: 1.5;
+    color: var(--figma-color-text-secondary, #6b6b6b);
+  }
+  .drop {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 120px;
+    padding: 12px;
+    text-align: center;
+    border: 1px dashed var(--figma-color-border, #d9d9d9);
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .drop.over {
+    border-color: var(--figma-color-border-selected, #0d99ff);
+  }
+  input[type="file"] {
+    display: none;
+  }
+  #status {
+    margin-top: 12px;
+    min-height: 16px;
+  }
+  #status.error {
+    color: var(--figma-color-text-danger, #b3261e);
+  }
+</style>
+
+<h1>Pinterest → Figma</h1>
+<p>
+  Drop the <code>.figma.json</code> file the converter downloaded, or click to choose it. Each pin
+  becomes a rectangle with an image fill inside one board frame.
+</p>
+
+<label class="drop" id="drop">
+  <span id="drop-label">Drop a .figma.json file here</span>
+  <input type="file" id="file" accept=".json,application/json" />
+</label>
+
+<div id="status"></div>
+
+<script>
+  const drop = document.getElementById("drop");
+  const fileInput = document.getElementById("file");
+  const status = document.getElementById("status");
+
+  function setStatus(message, isError) {
+    status.textContent = message;
+    status.className = isError ? "error" : "";
+  }
+
+  async function handleFile(file) {
+    if (!file) return;
+    setStatus(`Reading ${file.name}…`, false);
+    try {
+      const document_ = JSON.parse(await file.text());
+      setStatus("Building layers…", false);
+      parent.postMessage({ pluginMessage: { type: "import", document: document_ } }, "*");
+    } catch (error) {
+      setStatus("That file is not valid JSON.", true);
+    }
+  }
+
+  fileInput.addEventListener("change", (event) => handleFile(event.target.files[0]));
+
+  for (const eventName of ["dragenter", "dragover"]) {
+    drop.addEventListener(eventName, (event) => {
+      event.preventDefault();
+      drop.classList.add("over");
+    });
+  }
+  for (const eventName of ["dragleave", "drop"]) {
+    drop.addEventListener(eventName, (event) => {
+      event.preventDefault();
+      drop.classList.remove("over");
+    });
+  }
+  drop.addEventListener("drop", (event) => handleFile(event.dataTransfer.files[0]));
+
+  onmessage = (event) => {
+    const message = event.data.pluginMessage;
+    if (!message) return;
+    if (message.type === "progress") {
+      setStatus(`Building layers… ${message.done}/${message.total}`, false);
+    } else if (message.type === "done") {
+      setStatus(`Imported ${message.imported} layers.`, false);
+    } else if (message.type === "error") {
+      setStatus(message.message, true);
+    }
+  };
+</script>
