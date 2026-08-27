@@ -221,22 +221,36 @@ export function Converter() {
                 type="button"
                 onClick={() => exportBoard("svg")}
                 disabled={busy || boardPins.length === 0}
-                className="rounded-lg bg-stone-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-stone-700 disabled:cursor-not-allowed disabled:opacity-40"
+                className="flex flex-col rounded-lg bg-stone-900 px-4 py-2.5 text-left transition hover:bg-stone-700 disabled:cursor-not-allowed disabled:opacity-40"
               >
-                {status === "exporting" ? "Building…" : "Download SVG"}
+                <span className="text-sm font-medium text-white">
+                  {status === "exporting" ? "Building…" : "Download SVG"}
+                </span>
+                <span className="text-xs text-stone-300">
+                  Drag straight onto a Figma canvas
+                </span>
               </button>
+
               <button
                 type="button"
                 onClick={() => exportBoard("figma")}
                 disabled={busy || boardPins.length === 0}
-                className="rounded-lg border border-stone-300 px-4 py-2 text-sm font-medium text-stone-800 transition hover:border-stone-500 disabled:cursor-not-allowed disabled:opacity-40"
+                className="flex flex-col rounded-lg border border-stone-300 px-4 py-2.5 text-left transition hover:border-stone-500 disabled:cursor-not-allowed disabled:opacity-40"
               >
-                Download plugin document
+                <span className="text-sm font-medium text-stone-800">
+                  Download plugin document
+                </span>
+                <span className="text-xs text-stone-500">
+                  Needs the companion plugin — Figma cannot import it directly
+                </span>
               </button>
+
               <p className="text-xs leading-relaxed text-stone-500">
-                Drag the SVG onto a Figma canvas for a one-shot import. Use the plugin document
-                with <code className="font-mono">figma-plugin/</code> in this repo to get named
-                frames with real image fills.
+                The SVG is the one-click route: Figma reads it natively and each pin lands as an
+                image fill. The plugin document is a <code className="font-mono">.json</code>{" "}
+                payload for <code className="font-mono">figma-plugin/</code> in this repo — install
+                that plugin first, then drop the file on its window to get named, editable layers.
+                Dragging the <code className="font-mono">.json</code> into Figma will fail.
               </p>
             </div>
 

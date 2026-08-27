@@ -84,13 +84,21 @@ export function parseBoardSpec(value: unknown): BoardSpec {
   };
 }
 
+const MAX_SLUG_LENGTH = 60;
+
 /** Filesystem-safe name for a downloaded export. */
 export function exportFilename(title: string, extension: string): string {
-  const slug =
-    title
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "")
-      .slice(0, 60) || "moodboard";
-  return `${slug}.${extension}`;
+  const full = title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+  let slug = full.slice(0, MAX_SLUG_LENGTH);
+  if (full.length > MAX_SLUG_LENGTH) {
+    // Cut back to a word boundary rather than leaving a half word like "pag".
+    const lastBreak = slug.lastIndexOf("-");
+    if (lastBreak > 0) slug = slug.slice(0, lastBreak);
+  }
+
+  return `${slug || "moodboard"}.${extension}`;
 }

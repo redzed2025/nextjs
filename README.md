@@ -35,8 +35,12 @@ npm run build
 | Pin source links | Dropped | Kept as `pinterestSourceUrl` plugin data |
 
 The SVG embeds every image as a `data:` URI, so the file works offline and
-Figma turns each `<image>` into an image fill on import. See
-[`figma-plugin/README.md`](figma-plugin/README.md) for the plugin.
+Figma turns each `<image>` into an image fill on import.
+
+The plugin document is **not** a file Figma can open. Dragging the `.json` onto
+a canvas fails with "file format not recognized" — it is a payload for the
+plugin, which has to be installed first. See
+[`figma-plugin/README.md`](figma-plugin/README.md).
 
 ## Layout
 

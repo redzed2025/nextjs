@@ -162,6 +162,19 @@ describe("exportFilename", () => {
   it("falls back when nothing survives slugification", () => {
     assert.equal(exportFilename("✨✨", "figma.json"), "moodboard.figma.json");
   });
+
+  it("cuts a long title at a word boundary instead of mid-word", () => {
+    const name = exportFilename(
+      "Find your perfect place to call home real estate landing page",
+      "figma.json",
+    );
+    assert.equal(name, "find-your-perfect-place-to-call-home-real-estate-landing.figma.json");
+    assert.equal(name.includes("-pag."), false);
+  });
+
+  it("keeps a title that fits intact", () => {
+    assert.equal(exportFilename("Warm kitchen", "svg"), "warm-kitchen.svg");
+  });
 });
 
 describe("readImageSize", () => {
